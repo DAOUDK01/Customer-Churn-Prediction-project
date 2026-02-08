@@ -37,6 +37,38 @@ MODEL_CONFIG = {
     'cv_folds': 5
 }
 
+# Model Registry
+MODEL_REGISTRY = MODELS_PATH / "simple_churn_model.joblib"
+
+# API Configuration
+API_CONFIG = {
+    'host': '0.0.0.0',
+    'port': 8000,
+    'title': 'Customer Churn Prediction API',
+    'version': '2.0.0',
+    'max_batch_size': 1000,
+    'rate_limit': 1000,  # requests per minute
+    'auth_token': 'demo-token-2026'
+}
+
+# Monitoring Configuration
+MONITORING_CONFIG = {
+    'drift_threshold': 0.1,
+    'performance_threshold': 0.05,
+    'alert_threshold': 0.15,
+    'monitoring_window_days': 7,
+    'baseline_update_frequency_days': 30
+}
+
+# Batch Processing Configuration
+BATCH_CONFIG = {
+    'batch_size': 1000,
+    'max_workers': 4,
+    'chunk_size': 10000,
+    'max_memory_mb': 2048,
+    'timeout_seconds': 3600
+}
+
 # Data preprocessing parameters
 PREPROCESSING_CONFIG = {
     'missing_value_threshold': 0.1,  # Drop columns with >10% missing values
