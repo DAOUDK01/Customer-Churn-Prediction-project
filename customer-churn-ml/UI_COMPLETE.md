@@ -45,7 +45,8 @@ st.dataframe(predictions_df, use_container_width=True)
 #### **Step 1: Start the Production API**
 ```bash
 cd customer-churn-ml
-python src/api.py
+python -m src.api
+
 ```
 *API will run on http://localhost:8000*
 

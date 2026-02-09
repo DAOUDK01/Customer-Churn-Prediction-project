@@ -60,6 +60,7 @@ class ChurnPredictor:
         """
         self.model_path = Path(model_path) if model_path else MODEL_PIPELINE_PATH
         self.pipeline = None
+        self.model = None
         self.model_metadata = None
         self.is_loaded = False
         self.enable_monitoring = enable_monitoring
@@ -91,6 +92,7 @@ class ChurnPredictor:
         try:
             # Load model
             self.pipeline = joblib.load(self.model_path)
+            self.model = self.pipeline
             
             # Try to load metadata if available
             metadata_path = self.model_path.parent / "model_metadata.json"
@@ -107,6 +109,7 @@ class ChurnPredictor:
             # Return loading summary
             result = {
                 "status": "success",
+                "success": True,
                 "model_path": str(self.model_path),
                 "load_time_seconds": load_time,
                 "model_version": self.model_metadata.get("version") if self.model_metadata else "unknown",

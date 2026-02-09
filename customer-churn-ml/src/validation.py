@@ -337,6 +337,8 @@ class DataSchema:
         return series.map(bool_mapping).astype('boolean')
 
 
+"""High-level validators and helpers for churn data."""
+
 # Predefined schema for customer churn data
 CHURN_DATA_SCHEMA = DataSchema([
     FieldSchema(name="customerID", data_type=DataType.STRING, required=False),
@@ -379,6 +381,44 @@ CHURN_DATA_SCHEMA = DataSchema([
     FieldSchema(name="TotalCharges", data_type=DataType.NUMERIC,
                min_value=0, max_value=10000)
 ])
+
+
+class DataValidator:
+    """Simple wrapper around CHURN_DATA_SCHEMA for legacy code paths.
+
+    Provides a validate_customer_data method used by the API and batch
+    pipeline. It normalizes single-record dictionaries into a DataFrame
+    and returns a compact {valid, issues} structure expected by callers.
+    """
+
+    def __init__(self, schema: DataSchema = CHURN_DATA_SCHEMA):
+        self.schema = schema
+
+    def validate_customer_data(self, customer: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate a single customer dictionary.
+
+        Args:
+            customer: Mapping of field name to value for one customer.
+
+        Returns:
+            Dict with keys:
+            - valid: bool
+            - issues: list or None with human-readable messages
+        """
+        # Convert single record to DataFrame for schema validator
+        df = pd.DataFrame([customer])
+        result = self.schema.validate(df)
+
+        issues: List[str] = []
+        errors = result.get("errors") or []
+        warnings = result.get("warnings") or []
+        issues.extend(errors)
+        issues.extend(warnings)
+
+        return {
+            "valid": bool(result.get("valid", False)),
+            "issues": issues or None,
+        }
 
 
 def validate_churn_data(data: pd.DataFrame) -> Dict[str, Any]:

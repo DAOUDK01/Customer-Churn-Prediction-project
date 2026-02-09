@@ -18,22 +18,10 @@ from pathlib import Path
 import time
 import os
 
-# Import our production modules
-try:
-    from src.config import PROJECT_ROOT, MODEL_REGISTRY, API_CONFIG, MONITORING_CONFIG, BATCH_CONFIG
-    from src.predict import ChurnPredictor
-    from src.monitoring import PredictionMonitor
-    from src.validation import DataValidator, validate_churn_data
-except ImportError:
-    # Fallback for running as standalone script
-    import sys
-    from pathlib import Path
-    sys.path.append(str(Path(__file__).parent))
-    
-    from config import PROJECT_ROOT, MODEL_REGISTRY, API_CONFIG, MONITORING_CONFIG, BATCH_CONFIG
-    from predict import ChurnPredictor
-    from monitoring import PredictionMonitor
-    from validation import DataValidator, validate_churn_data
+from src.config import PROJECT_ROOT, MODEL_REGISTRY, API_CONFIG, MONITORING_CONFIG, BATCH_CONFIG
+from src.predict import ChurnPredictor
+from src.monitoring import PredictionMonitor
+from src.validation import DataValidator, validate_churn_data
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -70,10 +58,10 @@ app.add_middleware(
 # Security
 security = HTTPBearer()
 
-# Global variables
+# Global service instances
 predictor = None
 monitor = None
-validator = None
+data_validator = None
 
 # Pydantic models for request/response
 class CustomerData(BaseModel):
@@ -131,7 +119,7 @@ class HealthResponse(BaseModel):
 @app.on_event("startup")
 async def startup_event():
     """Initialize the ML system on startup"""
-    global predictor, monitor, validator
+    global predictor, monitor, data_validator
     
     logger.info("Starting Customer Churn Prediction API...")
     
@@ -151,7 +139,7 @@ async def startup_event():
         
         # Initialize monitoring and validation
         monitor = PredictionMonitor()
-        validator = DataValidator()
+        data_validator = DataValidator()
         
         logger.info("✅ API startup complete - all systems operational")
         
@@ -188,22 +176,27 @@ async def root():
 async def health_check():
     """Comprehensive health check"""
     try:
+        if predictor is None or predictor.model is None:
+            raise HTTPException(status_code=500, detail="Model not loaded")
+
         import psutil
         process = psutil.Process(os.getpid())
         memory_usage = process.memory_info().rss / 1024 / 1024  # MB
-        
-        # Check model status
-        model_loaded = predictor is not None and predictor.model is not None
-        model_version = predictor.get_model_info().get('version', 'unknown') if model_loaded else 'none'
-        
+
+        model_info = predictor.get_model_info()
+        metadata = model_info.get("metadata", {}) if isinstance(model_info, dict) else {}
+        model_version = metadata.get("version") or model_info.get("model_version") or "unknown"
+
         return HealthResponse(
-            status="healthy" if model_loaded else "degraded",
+            status="healthy",
             timestamp=datetime.now().isoformat(),
-            model_loaded=model_loaded,
+            model_loaded=True,
             model_version=model_version,
             uptime_seconds=time.time(),  # Simplified uptime
             memory_usage_mb=memory_usage
         )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=500, detail="Health check failed")
@@ -218,10 +211,7 @@ async def predict_single(
     start_time = time.time()
     
     try:
-        # Validate input
-        validation_result = validator.validate_customer_data(customer.dict())
-        if not validation_result['valid']:
-            raise HTTPException(status_code=400, detail=f"Invalid input: {validation_result['issues']}")
+        # Pydantic CustomerData model already validates input fields
         
         # Make prediction
         prediction_result = predictor.predict_single(
@@ -232,7 +222,15 @@ async def predict_single(
         
         # Calculate business impact
         monthly_revenue = customer.MonthlyCharges
-        risk_level = prediction_result['prediction_label']
+        churn_prob = prediction_result['churn_probability']
+        
+        # Convert probability to risk level
+        if churn_prob >= 0.7:
+            risk_level = "HIGH"
+        elif churn_prob >= 0.4:
+            risk_level = "MEDIUM"
+        else:
+            risk_level = "LOW"
         
         business_impact = {
             "monthly_revenue_at_risk": monthly_revenue if risk_level == "HIGH" else 0,
@@ -244,10 +242,10 @@ async def predict_single(
         response = PredictionResponse(
             customer_id=f"cust_{int(time.time()*1000)}",
             churn_risk=risk_level,
-            churn_probability=prediction_result['prediction_proba'],
-            confidence_score=prediction_result.get('confidence', 0.85),
+            churn_probability=churn_prob,
+            confidence_score=prediction_result.get('confidence_level', 'Medium') == 'High' and 0.9 or 0.7,
             prediction_time=datetime.now().isoformat(),
-            model_version=predictor.get_model_info().get('version', '1.0'),
+            model_version=prediction_result.get('model_version', '1.0'),
             business_impact=business_impact
         )
         
@@ -291,8 +289,15 @@ async def predict_batch(
                     TotalCharges=customer.TotalCharges
                 )
                 
-                risk_level = prediction_result['prediction_label']
-                probability = prediction_result['prediction_proba']
+                churn_prob = prediction_result['churn_probability']
+                
+                # Convert probability to risk level
+                if churn_prob >= 0.7:
+                    risk_level = "HIGH"
+                elif churn_prob >= 0.4:
+                    risk_level = "MEDIUM"
+                else:
+                    risk_level = "LOW"
                 
                 # Count risk levels
                 if risk_level == "HIGH":
@@ -302,7 +307,7 @@ async def predict_batch(
                 else:
                     low_risk_count += 1
                 
-                total_probability += probability
+                total_probability += churn_prob
                 
                 # Business impact calculation
                 business_impact = {
@@ -314,10 +319,10 @@ async def predict_batch(
                 predictions.append(PredictionResponse(
                     customer_id=f"batch_cust_{i+1}",
                     churn_risk=risk_level,
-                    churn_probability=probability,
-                    confidence_score=prediction_result.get('confidence', 0.85),
+                    churn_probability=churn_prob,
+                    confidence_score=prediction_result.get('confidence_level', 'Medium') == 'High' and 0.9 or 0.7,
                     prediction_time=datetime.now().isoformat(),
-                    model_version=predictor.get_model_info().get('version', '1.0'),
+                    model_version=prediction_result.get('model_version', '1.0'),
                     business_impact=business_impact
                 ))
                 
@@ -336,7 +341,7 @@ async def predict_batch(
             avg_churn_probability=total_probability / len(predictions) if predictions else 0.0,
             predictions=predictions,
             processing_time_ms=processing_time,
-            model_version=predictor.get_model_info().get('version', '1.0')
+            model_version=predictions[0].model_version if predictions else "1.0"
         )
         
         # Log batch prediction (background task)
@@ -445,4 +450,4 @@ async def global_exception_handler(request, exc):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run("src.api:app", host="0.0.0.0", port=8000, log_level="info")

@@ -14,11 +14,16 @@ Production-grade ML system for customer churn prediction with:
 from .config import *
 from .preprocess import load_raw_data, clean_data, prepare_features_target
 from .predict import ChurnPredictor, predict_churn, batch_predict
-from .evaluate import calculate_classification_metrics, generate_model_report
 from .utils import setup_logging, get_data_quality_report
-from .governance import ModelRegistry, BusinessImpactCalculator, generate_model_card
 from .monitoring import DataDriftMonitor, PredictionMonitor, SystemHealthMonitor
 from .validation import validate_churn_data, sanitize_churn_data, CHURN_DATA_SCHEMA
+
+# Optional imports (require matplotlib/extra dependencies)
+try:
+    from .evaluate import calculate_classification_metrics, generate_model_report
+    from .governance import ModelRegistry, BusinessImpactCalculator, generate_model_card
+except ImportError:
+    pass  # These modules are optional for API runtime
 
 __version__ = "1.0.0"
 __author__ = "ML Engineering Team"

@@ -3,15 +3,25 @@ Utility functions for Customer Churn ML project.
 
 Contains helper functions used across the project.
 """
+from __future__ import annotations
 
 import pandas as pd
 import numpy as np
 import logging
 import json
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, TYPE_CHECKING
 from pathlib import Path
-import matplotlib.pyplot as plt
-import seaborn as sns
+
+# Optional visualization imports
+try:
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    HAS_PLOTTING = True
+except ImportError:
+    HAS_PLOTTING = False
+
+if TYPE_CHECKING:
+    import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 

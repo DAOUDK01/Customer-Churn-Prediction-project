@@ -1,0 +1,272 @@
+[
+  {
+    "timestamp": "2026-02-09T16:53:41.038444",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.4,
+      "std_probability": 0.0,
+      "min_probability": 0.4,
+      "max_probability": 0.4,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 24.0,
+        "MonthlyCharges": 65.0,
+        "TotalCharges": 1500.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:56:42.206246",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.4,
+      "std_probability": 0.0,
+      "min_probability": 0.4,
+      "max_probability": 0.4,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 24.0,
+        "MonthlyCharges": 65.0,
+        "TotalCharges": 1500.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:57:18.065083",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.1,
+      "std_probability": 0.0,
+      "min_probability": 0.1,
+      "max_probability": 0.1,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 1.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 14.0,
+        "MonthlyCharges": 20.0,
+        "TotalCharges": 1000.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:58:08.622230",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.1,
+      "std_probability": 0.0,
+      "min_probability": 0.1,
+      "max_probability": 0.1,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 1.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 12.0,
+        "MonthlyCharges": 50.0,
+        "TotalCharges": 600.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:58:08.714265",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.4,
+      "std_probability": 0.0,
+      "min_probability": 0.4,
+      "max_probability": 0.4,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 24.0,
+        "MonthlyCharges": 65.0,
+        "TotalCharges": 1560.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:58:08.788417",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.5,
+      "std_probability": 0.0,
+      "min_probability": 0.5,
+      "max_probability": 0.5,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 36.0,
+        "MonthlyCharges": 80.0,
+        "TotalCharges": 2880.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:58:08.935029",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 0.0,
+      "negative_rate": 1.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.0,
+      "std_probability": 0.0,
+      "min_probability": 0.0,
+      "max_probability": 0.0,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 1.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 48.0,
+        "MonthlyCharges": 45.0,
+        "TotalCharges": 2160.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:58:09.045308",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 1.0,
+      "negative_rate": 0.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.7,
+      "std_probability": 0.0,
+      "min_probability": 0.7,
+      "max_probability": 0.7,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 6.0,
+        "MonthlyCharges": 95.0,
+        "TotalCharges": 570.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:59:20.354277",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 1.0,
+      "negative_rate": 0.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.7,
+      "std_probability": 0.0,
+      "min_probability": 0.7,
+      "max_probability": 0.7,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 24.0,
+        "MonthlyCharges": 85.0,
+        "TotalCharges": 1500.0
+      }
+    }
+  },
+  {
+    "timestamp": "2026-02-09T16:59:34.044304",
+    "model_version": null,
+    "batch_size": 1,
+    "prediction_stats": {
+      "positive_rate": 1.0,
+      "negative_rate": 0.0,
+      "unique_predictions": 1
+    },
+    "probability_stats": {
+      "mean_probability": 0.6,
+      "std_probability": 0.0,
+      "min_probability": 0.6,
+      "max_probability": 0.6,
+      "high_confidence_rate": 0.0,
+      "low_confidence_rate": 0.0
+    },
+    "input_stats": {
+      "feature_count": 3,
+      "missing_rate": 0.0,
+      "numeric_feature_means": {
+        "tenure": 24.0,
+        "MonthlyCharges": 85.0,
+        "TotalCharges": 100.0
+      }
+    }
+  }
+]
